@@ -9,25 +9,26 @@ from requests import request
 
 class API:
     def __init__(self):
+        self._host = 'http://106.75.33.221:7000'
         self._links = {
-            'NEW_GAME': ('http://106.75.33.221:7000/api/game', 'POST'),
-            'GET_GAME_LIST': ('http://106.75.33.221:7000/api/game', 'GET'),
-            'JOIN_GAME': ('http://106.75.33.221:7000/api/game', 'PATCH'),
-            'START_GAME': ('http://106.75.33.221:7000/api/game/', 'PUT'),
-            'GET_GAME': ('http://106.75.33.221:7000/api/game/', 'GET'),
-            'REG_PLAYER': ('http://106.75.33.221:7000/api/player', 'POST'),
-            'GET_PLAYER': ('http://106.75.33.221:7000/api/player/', 'GET'),
-            'GET_MAP': ('http://106.75.33.221:7000/api/map/', 'GET'),
-            'ATTACK_CELL': ('http://106.75.33.221:7000/api/cell/', 'PUT'),
+            'NEW_GAME': (f'{self._host}/api/game', 'POST'),
+            'GET_GAME_LIST': (f'{self._host}/api/game', 'GET'),
+            'JOIN_GAME': (f'{self._host}/api/game', 'PATCH'),
+            'START_GAME': (f'{self._host}/api/game/', 'PUT'),
+            'GET_GAME': (f'{self._host}/api/game/', 'GET'),
+            'REG_PLAYER': (f'{self._host}/api/player', 'POST'),
+            'GET_PLAYER': (f'{self._host}/api/player/', 'GET'),
+            'GET_MAP': (f'{self._host}/api/map/', 'GET'),
+            'ATTACK_CELL': (f'{self._host}/api/cell/', 'PUT'),
         }
         self._headers = {
             'Content-Type': 'application/json',
             'Cache-Control': 'no-cache'
         }
 
-    def new_game(self):
+    def new_game(self, map_name):
         payload = {
-            'Map': 'RectSmall'
+            'Map': map_name
         }
         res = request(self._links['NEW_GAME'][1], self._links['NEW_GAME'][0], json=payload, headers=self._headers)
         print(f'New game: {res.text}')
@@ -67,7 +68,7 @@ class API:
 
     def get_player(self, pid):
         res = request(self._links['GET_PLAYER'][1], self._links['GET_PLAYER'][0] + pid, headers=self._headers)
-        print(f'Get player {pid}')
+        # print(f'Get player {pid}')
         return res
 
     def get_map(self, map_name):

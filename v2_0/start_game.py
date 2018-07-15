@@ -4,11 +4,12 @@
 # @Author  : MiracleYoung
 # @File    : start_game.py
 
+import sys
 
 from v2_0.game import Game
 
 # gid = sys.argv[1]
-gid = 'abe3adb17bf04ac4b66b21e601b2cedf'
+gid = sys.argv[1]
 
 game_state = Game(gid).run().status_code
 # success: 200

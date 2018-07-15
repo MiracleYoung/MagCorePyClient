@@ -5,19 +5,19 @@
 # @File    : test.py
 
 
-from concurrent.futures import ThreadPoolExecutor
+import string
+import random
+import argparse
 
-links = {
-    'NEW_GAME': ('http://106.75.33.221:6000/api/game', 'POST'),
-    'GET_GAME_LIST': ('http://106.75.33.221:6000/api/game', 'GET'),
-    'JOIN_GAME': ('http://106.75.33.221:6000/api/game', 'PATCH'),
-    'START_GAME': ('http://106.75.33.221:6000/api/game/', 'PUT'),
-    'GET_GAME': ('http://106.75.33.221:6000/api/game/', 'GET'),
-    'REG_PLAYER': ('http://106.75.33.221:6000/api/player', 'POST'),
-    'GET_PLAYER': ('http://106.75.33.221:6000/api/player/', 'GET'),
-    'GET_MAP': ('http://106.75.33.221:6000/api/map/', 'GET'),
-    'ATTACK_CELL': ('http://106.75.33.221:6000/api/cell/', 'PUT'),
-}
+letters = string.ascii_letters
+nick = ''.join([random.choice(letters) for _ in range(16)])
+parser = argparse.ArgumentParser(prog='app', description='这是一个MagCore客户端启动器')
+parser.add_argument('--version', '-v', action='version', version='%(prog)s 2.0')
+parser.add_argument('--map', dest='map', type=str, default='RectSmall', help='地图名字。现在有RectSmall,RectMid,RectLarge')
+parser.add_argument('--is_new', dest='is_new', type=bool, default=True, help='是否创建游戏')
+parser.add_argument('--nick', dest='nick', type=str, default=nick, help='玩家昵称')
+parser.add_argument('--color', dest='color', type=int, choices=range(0, 10), default=0, help='玩家颜色')
+args = parser.parse_args()
+m, nick, is_new, color = args.map, args.nick, args.is_new, args.color
 
-with ThreadPoolExecutor(max_workers=3) as exector:
-    f = exector.map()
+print(m, nick, is_new, color)
