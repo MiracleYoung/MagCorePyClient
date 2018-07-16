@@ -4,20 +4,43 @@
 # @Author  : MiracleYoung
 # @File    : test.py
 
+from pprint import pprint
 
-import string
-import random
-import argparse
 
-letters = string.ascii_letters
-nick = ''.join([random.choice(letters) for _ in range(16)])
-parser = argparse.ArgumentParser(prog='app', description='这是一个MagCore客户端启动器')
-parser.add_argument('--version', '-v', action='version', version='%(prog)s 2.0')
-parser.add_argument('--map', dest='map', type=str, default='RectSmall', help='地图名字。现在有RectSmall,RectMid,RectLarge')
-parser.add_argument('--is_new', dest='is_new', type=bool, default=True, help='是否创建游戏')
-parser.add_argument('--nick', dest='nick', type=str, default=nick, help='玩家昵称')
-parser.add_argument('--color', dest='color', type=int, choices=range(0, 10), default=0, help='玩家颜色')
-args = parser.parse_args()
-m, nick, is_new, color = args.map, args.nick, args.is_new, args.color
+# 城市地图（字典的字典）
+# 字典的第1个键为起点城市，第2个键为目标城市其键值为两个城市间的直接距离
+# 将不相连点设为INF,方便更新两点之间的最小值
+INF = 99999
+G = {
+    1: {1: 0, 2: 2, 3: 6, 4: 4},
+    2: {1: INF, 2: 0, 3: 3, 4: INF},
+    3: {1: 7, 2: INF, 3: 0, 4: 1},
+    4: {1: 5, 2: INF, 3: 12, 4: 0}
+}
 
-print(m, nick, is_new, color)
+g = [
+    [0, 2, 6, 4],
+    [INF, 0, 3, INF],
+    [7, INF, 0, 1],
+    [5, INF, 12, 0]
+]
+
+# 算法思想：
+# 每个顶点都有可能使得两个顶点之间的距离变短
+# 当两点之间不允许有第三个点时，这些城市之间的最短路径就是初始路径
+
+# Floyd-Warshall算法核心语句
+# 分别在只允许经过某个点k的情况下，更新点和点之间的最短路径
+for k in G.keys():  # 不断试图往两点i,j之间添加新的点k，更新最短距离
+    for i in G.keys():
+        for j in G[i].keys():
+            if G[i][j] > G[i][k] + G[k][j]:
+                G[i][j] = G[i][k] + G[k][j]
+
+pprint(G)
+
+
+# dict_values([0, 2, 5, 4])
+# dict_values([9, 0, 3, 4])
+# dict_values([6, 8, 0, 1])
+# dict_values([5, 7, 10, 0])
